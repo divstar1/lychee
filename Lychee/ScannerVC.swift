@@ -14,8 +14,26 @@ class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
     
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
+    
     override func viewDidLoad() {
         setUpScanner()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        runCaptureSession()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        endCaptureSession()
     }
     
     func setUpScanner() {
@@ -34,66 +52,9 @@ class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         
         // store metadata objects emitted by video capture for processing
         // specifically, capture barcodes
-        startBarcodeRecognition(captureSession: captureSession)
+        setUpBarcodeRecognition(captureSession: captureSession)
 
         setUpPreviewLayer()
-    }
-    
-    func getVideoInput(captureDevice:AVCaptureDevice) -> AVCaptureDeviceInput? {
-        // if device supports video input, return the input structure
-        let videoInput: AVCaptureDeviceInput
-        do {
-            videoInput = try AVCaptureDeviceInput(device: captureDevice)
-            return videoInput
-        } catch {
-            return nil
-        }
-    }
-    
-    func setUpPreviewLayer() {
-        self.previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        self.previewLayer.frame = view.layer.bounds
-        self.previewLayer.videoGravity = .resizeAspectFill
-        self.view.layer.addSublayer(previewLayer)
-    }
-    
-    
-    func addInputToCaptureSession(captureSession:AVCaptureSession, input:AVCaptureDeviceInput) {
-        // if session supports video capture
-        if captureSession.canAddInput(input) {
-            captureSession.addInput(input)
-        } else {
-            failed()
-            return
-        }
-    }
-
-    func startBarcodeRecognition(captureSession:AVCaptureSession) {
-        let metadataOutput = AVCaptureMetadataOutput()
-        
-        // capture barcode metadata captured by video session
-        if captureSession.canAddOutput(metadataOutput) {
-            metadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
-            captureSession.addOutput(metadataOutput)
-            metadataOutput.metadataObjectTypes = [.ean8, .ean13, .pdf417, .upce]
-        } else {
-            failed()
-            return
-        }
-    }
-    
-    func failed()  {
-        captureSession = nil
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        runCaptureSession()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(true)
-        endCaptureSession()
     }
     
     func runCaptureSession() {
@@ -114,6 +75,52 @@ class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         }
     }
     
+    func getVideoInput(captureDevice:AVCaptureDevice) -> AVCaptureDeviceInput? {
+        // if device supports video input, return the input structure
+        let videoInput: AVCaptureDeviceInput
+        do {
+            videoInput = try AVCaptureDeviceInput(device: captureDevice)
+            return videoInput
+        } catch {
+            return nil
+        }
+    }
+    
+    func addInputToCaptureSession(captureSession:AVCaptureSession, input:AVCaptureDeviceInput) {
+        // if session supports video capture
+        if captureSession.canAddInput(input) {
+            captureSession.addInput(input)
+        } else {
+            failed()
+            return
+        }
+    }
+    
+    func setUpBarcodeRecognition(captureSession:AVCaptureSession) {
+        let metadataOutput = AVCaptureMetadataOutput()
+        
+        // capture barcode metadata captured by video session
+        if captureSession.canAddOutput(metadataOutput) {
+            metadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
+            captureSession.addOutput(metadataOutput)
+            metadataOutput.metadataObjectTypes = [.ean8, .ean13, .pdf417, .upce]
+        } else {
+            failed()
+            return
+        }
+    }
+    
+    func setUpPreviewLayer() {
+        self.previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        self.previewLayer.frame = view.layer.bounds
+        self.previewLayer.videoGravity = .resizeAspectFill
+        self.view.layer.addSublayer(previewLayer)
+    }
+    
+    func failed()  {
+        captureSession = nil
+    }
+    
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         // end capture session
         captureSession.stopRunning()
@@ -131,32 +138,12 @@ class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         self.dismiss(animated: true, completion: nil)
     }
     
-    func ingredientsFetched(ingredients: [String]) {
-        print(ingredients)
-    }
-    
     func codeFound(code: String) {
-        // dismiss scanner view
-        //self.perform(#selector(dismissScanner), with: self, afterDelay: 5)
-    
         // handle api call with upc code
         upc = code
         fetchIngredients(callback: ingredientsFetched)
     }
     
-    @objc func dismissScanner()  {
-        self.dismiss(animated: true, completion: nil)
-    }
-    
-    override var prefersStatusBarHidden: Bool {
-        return true
-    }
-    
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .portrait
-    }
-    
-    // very not secure CHANGE LATER !
     var upc = "044000032197"
     let appID = "5c01a1fd"
     let appKey = "2c98e3314eb31470f581a3f531f5fe3b"
@@ -170,67 +157,6 @@ class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
                 let foodData = Helper.createJSONData(data: ["ingredients":[keyFoodData]])
                 self.nutritionFromFoodDataRequest(foodDataJSON: foodData, callback:callback)
             }
-        }
-    }
-    
-    func getIngredients(foodContents:String) -> [String] {
-        let ingredients = foodContents.components(separatedBy: CharacterSet(charactersIn: ";()."))
-
-        var result = [String]()
-        
-        for item in ingredients {
-            let trimmedItem = item.trimmingCharacters(in: CharacterSet(charactersIn: " "))
-            if (trimmedItem.count != 0) {
-                result.append(trimmedItem)
-            }
-        }
-        
-        return result
-    }
-    
-    func getIngredientsFromNutritionData(nutritionData:Data) -> [String] {
-        let nutritionJSON = try? JSONSerialization.jsonObject(with: nutritionData, options: []) as? [String:Any]
-        
-        if let nutritionJSON = nutritionJSON,
-            let ingredients = nutritionJSON?["ingredients"] as? [Any],
-            let firstIngredient = ingredients[0] as? [String:Any],
-            let parsed = firstIngredient["parsed"] as? [[String:Any]],
-            let foodContentsLabel = parsed[0]["foodContentsLabel"] as? String {
-            return getIngredients(foodContents: foodContentsLabel)
-        }
-        
-        return [String]()
-    }
-    
-    func nutritionFromFoodDataRequest(foodDataJSON:Data, callback:@escaping ([String]) -> Void)  {
-        // modify JSON file and send to network request function
-        // catch errors, otherwise print nutrition data to console
-        let urlStr = "https://api.edamam.com/api/food-database/nutrients?app_id=\(appID)&app_key=\(appKey)"
-        
-        let _ = Helper.performNetworkRequest(url: urlStr, httpBody: foodDataJSON, httpMethod: "POST", requestHeaders: ["Content-Type":"application/json"]) { (data, response, error) in
-            if let error = error {
-                print(error.localizedDescription)
-            } else if let data = data {
-                let ingredients = self.getIngredientsFromNutritionData(nutritionData: data)
-                DispatchQueue.main.async {
-                    callback(ingredients)
-                }
-            }
-        }
-    }
-    
-    func extractKeyFoodData(foodDataDictionary:[String:Any]) -> [String:Any]? {
-        // given data for a particular food, extract its quantity, measure units, and unique ID
-        // this data will be sent to the nutrition call
-        
-        if let hints = foodDataDictionary["hints"] as? [[String:Any]],
-            let foodItem = hints[0]["food"] as? [String:Any],
-            let foodId = foodItem["foodId"] as? String,
-            let measures = hints[0]["measures"] as? [[String:Any]],
-            let measureURI = measures[0]["uri"] as? String {
-            return ["quantity":1, "measureURI":measureURI, "foodId":foodId]
-        } else {
-            return nil
         }
     }
     
@@ -256,5 +182,70 @@ class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
                 callback(nil)
             }
         }
+    }
+    
+    func extractKeyFoodData(foodDataDictionary:[String:Any]) -> [String:Any]? {
+        // given data for a particular food, extract its quantity, measure units, and unique ID
+        // this data will be sent to the nutrition call
+        
+        if let hints = foodDataDictionary["hints"] as? [[String:Any]],
+            let foodItem = hints[0]["food"] as? [String:Any],
+            let foodId = foodItem["foodId"] as? String,
+            let measures = hints[0]["measures"] as? [[String:Any]],
+            let measureURI = measures[0]["uri"] as? String {
+            return ["quantity":1, "measureURI":measureURI, "foodId":foodId]
+        } else {
+            return nil
+        }
+    }
+    
+    func nutritionFromFoodDataRequest(foodDataJSON:Data, callback:@escaping ([String]) -> Void)  {
+        // modify JSON file and send to network request function
+        // catch errors, otherwise print nutrition data to console
+        let urlStr = "https://api.edamam.com/api/food-database/nutrients?app_id=\(appID)&app_key=\(appKey)"
+        
+        let _ = Helper.performNetworkRequest(url: urlStr, httpBody: foodDataJSON, httpMethod: "POST", requestHeaders: ["Content-Type":"application/json"]) { (data, response, error) in
+            if let error = error {
+                print(error.localizedDescription)
+            } else if let data = data {
+                let ingredients = self.getIngredientsFromNutritionData(nutritionData: data)
+                DispatchQueue.main.async {
+                    callback(ingredients)
+                }
+            }
+        }
+    }
+    
+    func getIngredientsFromNutritionData(nutritionData:Data) -> [String] {
+        let nutritionJSON = try? JSONSerialization.jsonObject(with: nutritionData, options: []) as? [String:Any]
+        
+        if let nutritionJSON = nutritionJSON,
+            let ingredients = nutritionJSON?["ingredients"] as? [Any],
+            let firstIngredient = ingredients[0] as? [String:Any],
+            let parsed = firstIngredient["parsed"] as? [[String:Any]],
+            let foodContentsLabel = parsed[0]["foodContentsLabel"] as? String {
+            return getIngredients(foodContents: foodContentsLabel)
+        }
+        
+        return [String]()
+    }
+    
+    func getIngredients(foodContents:String) -> [String] {
+        let ingredients = foodContents.components(separatedBy: CharacterSet(charactersIn: ";()."))
+
+        var result = [String]()
+        
+        for item in ingredients {
+            let trimmedItem = item.trimmingCharacters(in: CharacterSet(charactersIn: " "))
+            if (trimmedItem.count != 0) {
+                result.append(trimmedItem)
+            }
+        }
+        
+        return result
+    }
+    
+    func ingredientsFetched(ingredients: [String]) {
+        print(ingredients)
     }
 }
