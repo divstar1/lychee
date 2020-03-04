@@ -12,11 +12,30 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    var welcomeController:WelcomeVC?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+       
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let welcomeVC = storyboard.instantiateViewController(withIdentifier: "WelcomeVC") as? WelcomeVC else {
+            return true
+        }
+
+        self.welcomeController = welcomeVC
+
+        welcomeVC.presentingDelegate = self
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        self.window?.rootViewController = welcomeVC
+        self.window?.makeKeyAndVisible()
+        
         return true
+    }
+    
+    func dismissWelcomeVC() {
+        welcomeController?.dismiss(animated: true, completion: nil)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        window?.rootViewController = storyboard.instantiateViewController(withIdentifier: "TabController")
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
