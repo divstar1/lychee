@@ -11,5 +11,4 @@ import UIKit
 
 class UserData {
     static let defaults = UserDefaults()
-    
 }
