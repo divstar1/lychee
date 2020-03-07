@@ -11,6 +11,26 @@ import UIKit
 
 class Helper {
     
+    static func addDropShadow(view: UIView, color: UIColor, opacity: Float, offsetWidth: Float, offsetHeight: Float, horizontalStretch: Float, verticalStretch: Float, shadowRadius: Float) {
+    
+        view.clipsToBounds = true
+
+        
+        let size = CGSize(width: view.bounds.width * CGFloat(horizontalStretch), height: view.bounds.height * CGFloat(verticalStretch))
+                
+        let rect = CGRect(origin: view.bounds.origin, size: size)
+
+       view.layer.shadowPath =
+              UIBezierPath(roundedRect: rect,
+              cornerRadius: view.layer.cornerRadius).cgPath
+        
+        view.layer.shadowColor = color.cgColor
+        view.layer.shadowOpacity = opacity
+        view.layer.shadowOffset = CGSize(width: CGFloat(offsetWidth), height: CGFloat(offsetHeight))
+        view.layer.shadowRadius = CGFloat(shadowRadius)
+        view.layer.masksToBounds = false
+    }
+    
     static func degreesToRadians(degrees:Int) -> Float {
         let radians = Float(degrees) * Float.pi / 180.0
         return radians

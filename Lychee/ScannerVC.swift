@@ -10,9 +10,11 @@ import Foundation
 import AVFoundation
 import UIKit
 
-class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
+class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate, UIPopoverPresentationControllerDelegate {
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
+    @IBOutlet var spinnerView: UIActivityIndicatorView!
+    @IBOutlet var cameraView: UIView!
     
     override var prefersStatusBarHidden: Bool {
         return true
@@ -23,7 +25,10 @@ class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     }
     
     override func viewDidLoad() {
+        endSpinner()
+        UserData.defaults.set([], forKey: "ingredients")
         setUpScanner()
+        view.bringSubviewToFront(spinnerView)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -37,8 +42,6 @@ class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     }
     
     func setUpScanner() {
-        view.backgroundColor = UIColor.black
-        
         // set up an AVCaptureSession
         captureSession = AVCaptureSession()
         
@@ -111,14 +114,25 @@ class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     }
     
     func setUpPreviewLayer() {
-        self.previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        self.previewLayer.frame = view.layer.bounds
-        self.previewLayer.videoGravity = .resizeAspectFill
-        self.view.layer.addSublayer(previewLayer)
+        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        
+        previewLayer.frame = CGRect(x: 0, y: 0, width: cameraView.frame.width * 1.05, height: cameraView.frame.height)
+        
+//        cameraView.layer.borderColor = UIColor(red: 102/255, green: 77/255, blue: 255/255, alpha: 1).cgColor
+//
+//        cameraView.layer.borderWidth = 2
+//        cameraView.layer.cornerRadius = 10
+
+        previewLayer.cornerRadius = 10
+
+    
+        previewLayer.videoGravity = .resizeAspectFill
+        cameraView.layer.addSublayer(previewLayer)
     }
     
     func failed()  {
         captureSession = nil
+        endSpinner()
     }
     
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
@@ -140,6 +154,7 @@ class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
     func codeFound(code: String) {
         // handle api call with upc code
+        startSpinner()
         upc = code
         fetchIngredients(callback: ingredientsFetched)
     }
@@ -246,6 +261,25 @@ class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     }
     
     func ingredientsFetched(ingredients: [String]) {
+        UserData.defaults.set(ingredients, forKey: "ingredients")
+        
+        if let vc = self.storyboard?.instantiateViewController(withIdentifier:"AllergensDetectedVC") {
+            vc.modalTransitionStyle   = .coverVertical
+            vc.modalPresentationStyle = .popover
+            self.present(vc, animated: true, completion: nil)
+        }
+        
+        
         print(ingredients)
+    }
+    
+    func startSpinner() {
+        spinnerView.startAnimating()
+        spinnerView.isHidden = false
+    }
+    
+    func endSpinner() {
+        spinnerView.stopAnimating()
+        spinnerView.isHidden = true
     }
 }

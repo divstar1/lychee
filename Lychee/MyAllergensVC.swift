@@ -39,12 +39,12 @@ class MyAllergensVC: UIViewController {
             allergenLabel.textColor = UIColor.white
             allergenList.addArrangedSubview(allergenLabel)
             
-            if var allergenListData = UserData.defaults.array(forKey: "allergenList") {
+            if var allergenListData = UserData.defaults.array(forKey: "userAllergens") {
                 allergenListData.append(allergen)
-                UserData.defaults.set(allergenListData, forKey: "allergenList")
+                UserData.defaults.set(allergenListData, forKey: "userAllergens")
             } else {
                 let newAllergenList = [allergen]
-                UserData.defaults.set(newAllergenList, forKey: "allergenList")
+                UserData.defaults.set(newAllergenList, forKey: "userAllergens")
             }
         }
         
