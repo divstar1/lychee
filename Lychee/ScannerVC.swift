@@ -117,11 +117,6 @@ class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate, UIPop
         let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         
         previewLayer.frame = CGRect(x: 0, y: 0, width: cameraView.frame.width * 1.05, height: cameraView.frame.height)
-        
-//        cameraView.layer.borderColor = UIColor(red: 102/255, green: 77/255, blue: 255/255, alpha: 1).cgColor
-//
-//        cameraView.layer.borderWidth = 2
-//        cameraView.layer.cornerRadius = 10
 
         previewLayer.cornerRadius = 10
 
@@ -171,6 +166,11 @@ class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate, UIPop
             if let result = result, let keyFoodData = self.extractKeyFoodData(foodDataDictionary: result) {
                 let foodData = Helper.createJSONData(data: ["ingredients":[keyFoodData]])
                 self.nutritionFromFoodDataRequest(foodDataJSON: foodData, callback:callback)
+            } else {
+                DispatchQueue.main.async {
+                    self.endSpinner()
+                    self.presentPopover(vcIdentifier: "UPCNotFoundVC")
+                }
             }
         }
     }
@@ -210,6 +210,7 @@ class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate, UIPop
             let measureURI = measures[0]["uri"] as? String {
             return ["quantity":1, "measureURI":measureURI, "foodId":foodId]
         } else {
+            print("UPC not found")
             return nil
         }
     }
@@ -260,17 +261,41 @@ class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate, UIPop
         return result
     }
     
+    func detectAllergens() -> [String]? {
+        guard let allergens = UserData.defaults.array(forKey: "userAllergens") as? [String] else {return nil}
+        
+        guard let ingredients = UserData.defaults.array(forKey: "ingredients") as? [String] else {return nil}
+        
+        var allergenList = [String]()
+        
+        for a in allergens {
+            if ingredients.contains(a.uppercased()) {
+                allergenList.append(a)
+            }
+        }
+        
+        return allergenList
+    }
+    
     func ingredientsFetched(ingredients: [String]) {
         UserData.defaults.set(ingredients, forKey: "ingredients")
+        var vcIdentifier = ""
         
-        if let vc = self.storyboard?.instantiateViewController(withIdentifier:"AllergensDetectedVC") {
+        if let detected = detectAllergens() {
+            vcIdentifier = detected.count == 0 ? "AllergenFreeVC" : "AllergensDetectedVC"
+        }
+        
+        presentPopover(vcIdentifier: vcIdentifier)
+    
+        print(ingredients)
+    }
+    
+    func presentPopover(vcIdentifier: String) {
+        if let vc = self.storyboard?.instantiateViewController(withIdentifier: vcIdentifier) {
             vc.modalTransitionStyle   = .coverVertical
             vc.modalPresentationStyle = .popover
             self.present(vc, animated: true, completion: nil)
         }
-        
-        
-        print(ingredients)
     }
     
     func startSpinner() {

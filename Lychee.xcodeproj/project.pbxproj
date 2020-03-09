@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4E19AEE7221CC08600423CA0 /* EditThemeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E19AEE6221CC08600423CA0 /* EditThemeVC.swift */; };
-		4E54E867224DB5ED003706EE /* ScanItemVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E54E866224DB5ED003706EE /* ScanItemVC.swift */; };
 		4EAF4589221B1F5E006D6148 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAF4588221B1F5E006D6148 /* AppDelegate.swift */; };
 		4EAF458B221B1F5E006D6148 /* WelcomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAF458A221B1F5E006D6148 /* WelcomeVC.swift */; };
 		4EAF458E221B1F5F006D6148 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EAF458C221B1F5F006D6148 /* Main.storyboard */; };
@@ -18,9 +16,7 @@
 		4EAF45A9221B1F62006D6148 /* LycheeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAF45A8221B1F62006D6148 /* LycheeUITests.swift */; };
 		4EAF45B7221B2204006D6148 /* ScannerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAF45B6221B2204006D6148 /* ScannerVC.swift */; };
 		4EAF45B9221B22BB006D6148 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAF45B8221B22BB006D6148 /* Helper.swift */; };
-		4EAF45BB221C942A006D6148 /* MyAllergensVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAF45BA221C942A006D6148 /* MyAllergensVC.swift */; };
 		4EAF45BD221CB88B006D6148 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAF45BC221CB88B006D6148 /* UserData.swift */; };
-		933A7CF6240504840094E34F /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933A7CF5240504840094E34F /* SettingsVC.swift */; };
 		936B146124119240007EA98F /* AllergenCard.xib in Resources */ = {isa = PBXBuildFile; fileRef = 936B146024119240007EA98F /* AllergenCard.xib */; };
 		936B1463241198BC007EA98F /* AllergenCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936B1462241198BC007EA98F /* AllergenCardView.swift */; };
 		936B146524119B32007EA98F /* AddAllergenButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = 936B146424119B32007EA98F /* AddAllergenButton.xib */; };
@@ -85,8 +81,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		4E19AEE6221CC08600423CA0 /* EditThemeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditThemeVC.swift; sourceTree = "<group>"; };
-		4E54E866224DB5ED003706EE /* ScanItemVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanItemVC.swift; sourceTree = "<group>"; };
 		4EAF4585221B1F5E006D6148 /* Lychee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lychee.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EAF4588221B1F5E006D6148 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4EAF458A221B1F5E006D6148 /* WelcomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeVC.swift; sourceTree = "<group>"; };
@@ -102,9 +96,7 @@
 		4EAF45AA221B1F62006D6148 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4EAF45B6221B2204006D6148 /* ScannerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerVC.swift; sourceTree = "<group>"; };
 		4EAF45B8221B22BB006D6148 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
-		4EAF45BA221C942A006D6148 /* MyAllergensVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAllergensVC.swift; sourceTree = "<group>"; };
 		4EAF45BC221CB88B006D6148 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
-		933A7CF5240504840094E34F /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		9348EE6C241185CB0078C352 /* SF-Mono-RegularItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Mono-RegularItalic.otf"; sourceTree = "<group>"; };
 		9348EE6D241185CB0078C352 /* SF-Mono-Heavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Mono-Heavy.otf"; sourceTree = "<group>"; };
 		9348EE6E241185CB0078C352 /* SF-Mono-BoldItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Mono-BoldItalic.otf"; sourceTree = "<group>"; };
@@ -189,28 +181,24 @@
 		4EAF4587221B1F5E006D6148 /* Lychee */ = {
 			isa = PBXGroup;
 			children = (
-				936B149F2412BD8F007EA98F /* InputAllergenVC.swift */,
-				4EAF45BC221CB88B006D6148 /* UserData.swift */,
 				4EAF4588221B1F5E006D6148 /* AppDelegate.swift */,
 				4EAF458A221B1F5E006D6148 /* WelcomeVC.swift */,
-				4EAF458C221B1F5F006D6148 /* Main.storyboard */,
-				93DB3AE82412ED32002620A9 /* AllergensDetectedVC.swift */,
 				936B149D2411C9BF007EA98F /* AllergensVC.swift */,
+				936B149F2412BD8F007EA98F /* InputAllergenVC.swift */,
+				4EAF45B6221B2204006D6148 /* ScannerVC.swift */,
+				93DB3AE82412ED32002620A9 /* AllergensDetectedVC.swift */,
+				4EAF45B8221B22BB006D6148 /* Helper.swift */,
+				9379BDD4240D862F00540398 /* NutritionInfo.swift */,
+				4EAF45BC221CB88B006D6148 /* UserData.swift */,
+				4EAF458C221B1F5F006D6148 /* Main.storyboard */,
 				936B146424119B32007EA98F /* AddAllergenButton.xib */,
 				936B146624119BC5007EA98F /* AddAllergenButton.swift */,
-				936B1462241198BC007EA98F /* AllergenCardView.swift */,
 				936B146024119240007EA98F /* AllergenCard.xib */,
-				933A7CF5240504840094E34F /* SettingsVC.swift */,
-				934764B7240493EA00D655A6 /* Fonts */,
-				4E54E866224DB5ED003706EE /* ScanItemVC.swift */,
-				4E19AEE6221CC08600423CA0 /* EditThemeVC.swift */,
-				4EAF45BA221C942A006D6148 /* MyAllergensVC.swift */,
-				4EAF45B6221B2204006D6148 /* ScannerVC.swift */,
-				4EAF45B8221B22BB006D6148 /* Helper.swift */,
-				4EAF458F221B1F61006D6148 /* Assets.xcassets */,
+				936B1462241198BC007EA98F /* AllergenCardView.swift */,
 				4EAF4591221B1F61006D6148 /* LaunchScreen.storyboard */,
+				4EAF458F221B1F61006D6148 /* Assets.xcassets */,
 				4EAF4594221B1F61006D6148 /* Info.plist */,
-				9379BDD4240D862F00540398 /* NutritionInfo.swift */,
+				934764B7240493EA00D655A6 /* Fonts */,
 			);
 			path = Lychee;
 			sourceTree = "<group>";
@@ -461,19 +449,15 @@
 			files = (
 				4EAF45B7221B2204006D6148 /* ScannerVC.swift in Sources */,
 				936B149E2411C9BF007EA98F /* AllergensVC.swift in Sources */,
-				4E19AEE7221CC08600423CA0 /* EditThemeVC.swift in Sources */,
 				4EAF45BD221CB88B006D6148 /* UserData.swift in Sources */,
 				4EAF458B221B1F5E006D6148 /* WelcomeVC.swift in Sources */,
 				9379BDD5240D862F00540398 /* NutritionInfo.swift in Sources */,
 				4EAF4589221B1F5E006D6148 /* AppDelegate.swift in Sources */,
 				4EAF45B9221B22BB006D6148 /* Helper.swift in Sources */,
-				4E54E867224DB5ED003706EE /* ScanItemVC.swift in Sources */,
 				936B1463241198BC007EA98F /* AllergenCardView.swift in Sources */,
 				936B146724119BC5007EA98F /* AddAllergenButton.swift in Sources */,
 				936B14A02412BD8F007EA98F /* InputAllergenVC.swift in Sources */,
 				93DB3AE92412ED32002620A9 /* AllergensDetectedVC.swift in Sources */,
-				4EAF45BB221C942A006D6148 /* MyAllergensVC.swift in Sources */,
-				933A7CF6240504840094E34F /* SettingsVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
